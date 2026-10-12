@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF‑8">
+  <meta name="viewport" content="width=device‑width, initial‑scale=1.0">
+  <title>Chat en tiempo real</title>
+  <style>
+    body { max‑width: 550px; margin: 2rem auto; padding: 0 1rem; font‑family: Arial; }
+    #caja‑chat { height: 320px; border: 1px solid #ccc; padding: 10px; overflow‑y: auto; margin‑bottom:12px; }
+    .mensaje { margin:6px 0; }
+    #entrada { width:80%; padding:8px; }
+    #boton‑enviar { padding:8px 12px; }
+  </style>
+</head>
+<body>
+  <h2>Chat grupal tiempo real</h2>
+  <div id="caja‑chat"></div>
+  <input id="entrada" placeholder="Escribe tu mensaje…">
+  <button id="boton‑enviar">Enviar</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const cajaChat = document.getElementById('caja‑chat');
+    const entrada = document.getElementById('entrada');
+    const btnEnviar = document.getElementById('boton‑enviar');
+
+    function agregarMensaje(texto) {
+      const div = document.createElement('div');
+      div.className = 'mensaje';
+      div.textContent = texto;
+      cajaChat.appendChild(div);
+      cajaChat.scrollTop = cajaChat.scrollHeight;
+    }
+
+    btnEnviar.addEventListener('click', () => {
+      const texto = entrada.value.trim();
+      if(texto) {
+        socket.emit('mensaje', texto);
+        entrada.value = '';
+      }
+    });
+    entrada.addEventListener('keydown', e => { if(e.key==='Enter') btnEnviar.click(); });
+
+    socket.on('mensaje‑general', (texto) => {
+      agregarMensaje(texto);
+    });
+  </script>
+</body>
+</html>
