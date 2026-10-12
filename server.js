@@ -22,5 +22,5 @@ io.on('connection', (socket) => {
 
 const puerto = process.env.PORT || 3000;
 servidor.listen(puerto, () => {
-  console.log(Servidor activo en el puerto ${puerto});
+  console.log('Servidor activo en el puerto ' + puerto);
 });
